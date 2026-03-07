@@ -20,4 +20,4 @@ Short description of what this PR does (e.g. "Fix typo in 02-compose.md", "Add M
 
 Fixes #___(optional)
 
-Thanks for contributing! 🎮
+Thanks for contributing!
