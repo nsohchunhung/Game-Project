@@ -502,6 +502,23 @@ Special thanks to the open-source community and the maintainers of:
 
 ---
 
+## 📚 **Dive Deeper**
+
+This repo gets you hands-on with Docker, Kubernetes, and GitOps. If you want a structured path to *hireable* and production-ready, these resources extend the same approach:
+
+| Resource | What it is | Link |
+|--------|-------------|------|
+| **Build Your Own DevOps Lab** | Hands-on lab curriculum that fits this repo’s stack | [Gumroad](https://osomudeya.gumroad.com/l/BuildYourOwnDevOpsLab) |
+| **DevOps Operating System** | 6-week path: reading → building → explaining → getting hired | [Gumroad](https://osomudeya.gumroad.com/l/devops-atlas) |
+| **The Kubernetes Detective** | Systematic troubleshooting when pods break and logs aren’t enough | [Gumroad](https://osomudeya.gumroad.com/l/jabzk) |
+| **The DevOps Interview Decoder** | How to articulate systems and incidents under pressure (used by engineers at $170K+ roles) | [Gumroad](https://osomudeya.gumroad.com/l/pcpbks) |
+| **AI for DevOps** | 47 prompts for troubleshooting, automation, and learning faster | [Gumroad](https://osomudeya.gumroad.com/l/ai-for-devops) |
+| **Free DevOps Resume Template** | Resume structure that shows judgment, not just tool lists | [Gumroad](https://osomudeya.gumroad.com/l/free-resume-template) |
+
+*Same author as this repo; no affiliate links.*
+
+---
+
 ## 🎯 **Ready to Start?**
 
 **Choose your path above** → [Local Learning](docs/local/README.md) | [AWS Deployment](docs/aws/README.md) | [Quick Demo](#-start-here---choose-your-path)
