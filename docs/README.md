@@ -16,11 +16,11 @@
 
 ## 🎯 **Quick Navigation**
 
-| 🚀 **Start Here** | 📚 **Core Guides** | 🔧 **Reference** | 🎓 **Career** |
-|-------------------|-------------------|------------------|---------------|
-| [Overview](00-overview.md) | [Prerequisites](01-prereqs.md) | [Troubleshooting](08-troubleshooting.md) | [Interview Prep](../interviewprep.md) |
-| [Learning Path](#learning-path) | [Docker Compose](02-compose.md) | [FAQ](09-faq.md) | [Medium Article](../medium-blog-post.md) |
-| [Prerequisites](01-prereqs.md) | [Kubernetes Basics](03-k8s-basics.md) | [Glossary](10-glossary.md) | [Technical Deep Dives](#technical-deep-dives) |
+| 🚀 **Start Here** | 📚 **Local Development** | ☁️ **AWS Deployment** | 🔧 **Reference** |
+|-------------------|------------------------|----------------------|-----------------|
+| [Overview](local/00-overview.md) | [Local Docs](local/README.md) | [AWS Docs](aws/README.md) | [Troubleshooting](local/08-troubleshooting.md) |
+| [Learning Path](#learning-path) | [Docker Compose](local/02-compose.md) | [AWS Deployment](aws/aws-deployment-guide.md) | [FAQ](local/09-faq.md) |
+| [Prerequisites](local/01-prereqs.md) | [Kubernetes Basics](local/03-k8s-basics.md) | [AWS Architecture](aws/aws-architecture.md) | [Glossary](local/10-glossary.md) |
 
 ---
 
@@ -30,14 +30,15 @@
 
 | Step | Guide | What You'll Learn | Time | Difficulty |
 |------|-------|-------------------|------|------------|
-| **0** | [📖 Learning Path Overview](00-overview.md) | Complete tutorial roadmap and architecture | 15 min | 🟢 Beginner |
-| **1** | [⚙️ Development Environment Setup](01-prereqs.md) | Install Docker, Kubernetes tools, and dev environment | 30 min | 🟢 Beginner |
-| **2** | [🐳 Docker Multi-Container App](02-compose.md) | Build your first containerized application | 45 min | 🟢 Beginner |
-| **3** | [☸️ Kubernetes Production Deployment](03-k8s-basics.md) | Deploy apps on Kubernetes with databases | 60 min | 🟡 Intermediate |
-| **4** | [🌐 Internet Access & Networking](04-ingress.md) | Make your app accessible from the internet | 45 min | 🟡 Intermediate |
-| **5** | [📊 Performance Monitoring](05-observability.md) | Track app health with Prometheus & Grafana | 90 min | 🟡 Intermediate |
-| **6** | [🔄 Automated Deployments](06-gitops.md) | Deploy with GitOps automation | 60 min | 🟠 Advanced |
+| **0** | [📖 Learning Path Overview](local/00-overview.md) | Complete tutorial roadmap and architecture | 15 min | 🟢 Beginner |
+| **1** | [⚙️ Development Environment Setup](local/01-prereqs.md) | Install Docker, Kubernetes tools, and dev environment | 30 min | 🟢 Beginner |
+| **2** | [🐳 Docker Multi-Container App](local/02-compose.md) | Build your first containerized application | 45 min | 🟢 Beginner |
+| **3** | [☸️ Kubernetes Production Deployment](local/03-k8s-basics.md) | Deploy apps on Kubernetes with databases | 60 min | 🟡 Intermediate |
+| **4** | [🌐 Internet Access & Networking](local/04-ingress.md) | Make your app accessible from the internet | 45 min | 🟡 Intermediate |
+| **5** | [📊 Performance Monitoring](local/05-observability.md) | Track app health with Prometheus & Grafana | 90 min | 🟡 Intermediate |
+| **6** | [🔄 Automated Deployments](local/06-gitops.md) | Deploy with GitOps automation | 60 min | 🟠 Advanced |
 | **7** | [🌍 Global Scale & Security](07-global.md) | Production hardening, CDN, and auto-scaling | 120 min | 🔴 Expert |
+| **8** | [☁️ AWS Production Deployment](aws/aws-deployment-guide.md) | Deploy on AWS with EKS, RDS, and managed services | 180 min | 🔴 Expert |
 
 **⏱️ Total Time**: 5-8 hours  
 **🎯 Final Result**: Production-ready Kubernetes deployment with global access
@@ -47,16 +48,20 @@
 ## 🔧 **Reference Documentation**
 
 ### **📖 Technical References**
-- **[🚨 Troubleshooting Guide](08-troubleshooting.md)** - Common issues and solutions
-- **[❓ Frequently Asked Questions](09-faq.md)** - Quick answers to common questions  
-- **[📖 Technical Glossary](10-glossary.md)** - Terms and definitions explained
-- **[📝 Architecture Decisions](11-decision-notes.md)** - Why we chose specific technologies
+- **[🚨 Troubleshooting Guide](local/08-troubleshooting.md)** - Common issues and solutions
+- **[❓ Frequently Asked Questions](local/09-faq.md)** - Quick answers to common questions  
+- **[📖 Technical Glossary](local/10-glossary.md)** - Terms and definitions explained
+- **[📝 Architecture Decisions](local/11-decision-notes.md)** - Why we chose specific technologies
 
 ### **🛠️ Advanced Guides**
 - **[🔒 Security Contexts Deep Dive](security-contexts-guide.md)** - Production security hardening
 - **[📊 Custom Dashboard Guide](custom-dashboard-guide.md)** - Building monitoring dashboards
 - **[🌐 Cloudflare Setup Guide](cloudflare-tunnel-setup-guide.md)** - Global CDN configuration
 - **[🔍 Monitoring Troubleshooting](monitoring-troubleshooting.md)** - Observability issues
+- **[⚙️ Customization Guide](local/customization-guide.md)** - Customize application configuration
+- **[👤 User Guide](local/user-guide.md)** - How to access and use the application
+- **[🔧 Maintenance Guide (Local)](local/maintenance-guide.md)** - Maintain local environment
+- **[🔧 Maintenance Guide (AWS)](aws/maintenance-guide.md)** - Maintain AWS infrastructure
 
 ### **🎓 Career Development**
 - **[🎤 Interview Preparation](../interviewprep.md)** - Technical interview questions and answers
@@ -69,17 +74,18 @@
 
 ### **🚀 Fast Track** *(Experienced Users)*
 ```bash
-# Deploy everything at once
-git clone https://github.com/Osomudeya/DevOps-Home-Lab-2025.git
-cd humor-memory-game
-make deploy-all
-make verify
+# Local deployment
+docker-compose up -d
+
+# AWS deployment
+cd terraform/environments/prod
+terraform apply
 ```
 **Time**: 30-60 minutes  
 **Skills**: Kubernetes, Docker, kubectl experience required
 
 ### **📚 Guided Learning** *(Recommended for Beginners)*
-1. Start with [Project Overview](00-overview.md)
+1. Start with [Project Overview](local/00-overview.md)
 2. Follow each milestone guide in order
 3. Complete hands-on exercises
 4. Build production skills incrementally
@@ -88,9 +94,11 @@ make verify
 **Skills**: Suitable for beginners to intermediate
 
 ### **🎯 Topic-Specific** *(Focused Learning)*
-- **Monitoring Only**: [Observability Guide](05-observability.md)
+- **Local Development**: [Local Documentation](local/README.md)
+- **AWS Deployment**: [AWS Documentation](aws/README.md)
+- **Monitoring Only**: [Observability Guide](local/05-observability.md)
 - **Security Focus**: [Security Contexts Guide](security-contexts-guide.md)
-- **GitOps Workflow**: [GitOps Guide](06-gitops.md)
+- **GitOps Workflow**: [GitOps Guide](local/06-gitops.md)
 - **Global Deployment**: [Global Production Guide](07-global.md)
 
 ---
@@ -98,22 +106,23 @@ make verify
 ## 🏗️ **Technical Deep Dives**
 
 ### **🔍 Architecture Analysis**
-- **[System Architecture Overview](00-overview.md#architecture-overview)** - Complete system design
-- **[Network Flow Diagrams](04-ingress.md#network-architecture)** - Traffic routing and load balancing
+- **[System Architecture Overview](local/00-overview.md#architecture-overview)** - Complete system design
+- **[AWS Architecture](aws/aws-architecture.md)** - AWS infrastructure design
+- **[Network Flow Diagrams](local/04-ingress.md#network-architecture)** - Traffic routing and load balancing
 - **[Security Architecture](security-contexts-guide.md)** - Defense-in-depth implementation
-- **[Monitoring Strategy](05-observability.md#monitoring-strategy)** - Observability best practices
+- **[Monitoring Strategy](local/05-observability.md#monitoring-strategy)** - Observability best practices
 
 ### **⚙️ Technology Choices**
-- **[Kubernetes vs. Docker Compose](11-decision-notes.md#orchestration)** - When and why to use each
-- **[Ingress Controller Comparison](04-ingress.md#controller-options)** - NGINX vs. Traefik vs. others
-- **[Monitoring Stack Selection](05-observability.md#tool-comparison)** - Prometheus vs. alternatives
-- **[GitOps Tool Analysis](06-gitops.md#tool-comparison)** - ArgoCD vs. Flux vs. others
+- **[Kubernetes vs. Docker Compose](local/11-decision-notes.md#orchestration)** - When and why to use each
+- **[Ingress Controller Comparison](local/04-ingress.md#controller-options)** - NGINX vs. Traefik vs. others
+- **[Monitoring Stack Selection](local/05-observability.md#tool-comparison)** - Prometheus vs. alternatives
+- **[GitOps Tool Analysis](local/06-gitops.md#tool-comparison)** - ArgoCD vs. Flux vs. others
 
 ### **🚀 Performance Optimization**
-- **[Resource Tuning Guide](03-k8s-basics.md#resource-optimization)** - CPU and memory optimization
+- **[Resource Tuning Guide](local/03-k8s-basics.md#resource-optimization)** - CPU and memory optimization
 - **[Auto-scaling Configuration](07-global.md#horizontal-pod-autoscaling)** - HPA setup and tuning
 - **[CDN Integration](07-global.md#cloudflare-optimization)** - Global performance optimization
-- **[Database Performance](03-k8s-basics.md#database-optimization)** - PostgreSQL and Redis tuning
+- **[Database Performance](local/03-k8s-basics.md#database-optimization)** - PostgreSQL and Redis tuning
 
 ---
 
@@ -138,14 +147,15 @@ kubectl get pods -n argocd
 ### **📞 Support Channels**
 - 🐛 **Found a bug?** → [Open GitHub Issue](https://github.com/Osomudeya/DevOps-Home-Lab-2025.git/issues)
 - 💬 **Have questions?** → [GitHub Discussions](https://github.com/Osomudeya/DevOps-Home-Lab-2025.git/discussions)
-- 📖 **Need clarification?** → Check [FAQ](09-faq.md) or [Glossary](10-glossary.md)
+- 📖 **Need clarification?** → Check [FAQ](local/09-faq.md) or [Glossary](local/10-glossary.md)
 - 🎓 **Want to contribute?** → See [GitHub Issues](https://github.com/Osomudeya/DevOps-Home-Lab-2025.git/issues)
 
 ### **🚨 Emergency Troubleshooting**
-1. **Pods won't start**: Check [Troubleshooting Guide](08-troubleshooting.md#pod-issues)
-2. **Can't access application**: See [Network Troubleshooting](08-troubleshooting.md#network-issues)
+1. **Pods won't start**: Check [Troubleshooting Guide](local/08-troubleshooting.md#pod-issues)
+2. **Can't access application**: See [Network Troubleshooting](local/08-troubleshooting.md#network-issues)
 3. **ArgoCD problems**: Check [GitOps Troubleshooting](gitops-troubleshooting.md)
 4. **Monitoring not working**: See [Monitoring Troubleshooting](monitoring-troubleshooting.md)
+5. **AWS deployment issues**: Check [AWS Deployment Guide](aws/aws-deployment-guide.md)
 
 ---
 
@@ -236,8 +246,19 @@ We welcome contributions to improve these guides! Here's how you can help:
 - Improve security recommendations
 - Optimize performance suggestions
 
-**📋 See**: [GitHub Issues](https://github.com/Osomudeya/DevOps-Home-Lab-2025.git/issues) for detailed instructions
+**📋 See**: [CONTRIBUTING.md](../CONTRIBUTING.md) and [GitHub Issues](https://github.com/Osomudeya/DevOps-Home-Lab-2026-2027/issues) for detailed instructions.
+
+### **For maintainers**
+- [Repo improvements checklist](REPO-IMPROVEMENTS-CHECKLIST.md) – GitHub About, releases, PR triage
+- [GitHub About & first release](GITHUB-ABOUT-AND-RELEASE.md) – Copy-paste description, topics, and v1.0.0 release text
+- [User-friendliness assessment](USER-FRIENDLINESS-ASSESSMENT.md) – What’s already friendly and what was improved
 
 ---
 
-*Ready to start your production Kubernetes journey? Begin with the [Project Overview](00-overview.md) or jump straight into [Prerequisites Setup](01-prereqs.md)!*
+*Ready to start your production Kubernetes journey? Begin with the [Project Overview](local/00-overview.md) or jump straight into [Prerequisites Setup](local/01-prereqs.md)!*
+
+## 📁 Documentation Structure
+
+- **[Local Development](local/README.md)** - Docker Compose and local Kubernetes guides
+- **[AWS Deployment](aws/README.md)** - Production AWS infrastructure and deployment
+- **[General Guides](./)** - Shared documentation (monitoring, security, troubleshooting)

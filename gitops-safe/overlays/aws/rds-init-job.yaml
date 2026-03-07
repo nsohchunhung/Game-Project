@@ -1,0 +1,185 @@
+# Kubernetes Job to initialize RDS database schema
+# This job runs once after RDS is created to set up the database schema
+# Only used in AWS overlay (RDS), not in local deployments
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: rds-init-schema
+  namespace: humor-game
+  annotations:
+    argocd.argoproj.io/sync-wave: "1" # Run before backend deployment
+spec:
+  ttlSecondsAfterFinished: 300 # Clean up after 5 minutes
+  backoffLimit: 3
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: postgres-init
+          image: postgres:15-alpine
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Waiting for RDS to be ready..."
+              until pg_isready -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER"; do
+                echo "Waiting for database..."
+                sleep 2
+              done
+              
+              echo "Initializing database schema..."
+              PGPASSWORD="$DB_PASSWORD" psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" <<'EOF'
+              -- Enable UUID extension
+              CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+              
+              -- Drop tables if they exist (for clean reset)
+              DROP TABLE IF EXISTS game_matches CASCADE;
+              DROP TABLE IF EXISTS games CASCADE;
+              DROP TABLE IF EXISTS users CASCADE;
+              DROP VIEW IF EXISTS leaderboard;
+              
+              -- Create users table
+              CREATE TABLE users (
+                  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                  username VARCHAR(50) UNIQUE NOT NULL,
+                  email VARCHAR(100) UNIQUE,
+                  display_name VARCHAR(100),
+                  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                  last_played TIMESTAMP WITH TIME ZONE,
+                  total_games INTEGER DEFAULT 0,
+                  total_score INTEGER DEFAULT 0,
+                  best_score INTEGER DEFAULT 0,
+                  best_time INTEGER,
+                  is_active BOOLEAN DEFAULT true
+              );
+              
+              -- Create games table
+              CREATE TABLE games (
+                  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+                  username VARCHAR(50) NOT NULL,
+                  score INTEGER NOT NULL DEFAULT 0,
+                  moves INTEGER NOT NULL DEFAULT 0,
+                  time_elapsed INTEGER NOT NULL DEFAULT 0,
+                  cards_matched INTEGER NOT NULL DEFAULT 0,
+                  difficulty_level VARCHAR(20) DEFAULT 'easy',
+                  game_completed BOOLEAN DEFAULT false,
+                  started_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                  completed_at TIMESTAMP WITH TIME ZONE,
+                  game_data JSONB
+              );
+              
+              -- Create game_matches table
+              CREATE TABLE game_matches (
+                  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                  game_id UUID REFERENCES games(id) ON DELETE CASCADE,
+                  card1_id VARCHAR(50) NOT NULL,
+                  card2_id VARCHAR(50) NOT NULL,
+                  match_time INTEGER NOT NULL,
+                  points_earned INTEGER DEFAULT 10,
+                  bonus_points INTEGER DEFAULT 0,
+                  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+              );
+              
+              -- Create leaderboard view
+              CREATE OR REPLACE VIEW leaderboard AS
+              SELECT 
+                  u.username,
+                  u.display_name,
+                  u.total_games,
+                  u.total_score,
+                  u.best_score,
+                  u.best_time,
+                  u.last_played,
+                  CASE 
+                      WHEN u.total_games > 0 THEN ROUND(u.total_score::decimal / u.total_games, 2)
+                      ELSE 0 
+                  END as avg_score,
+                  ROW_NUMBER() OVER (ORDER BY u.best_score DESC, u.best_time ASC) as rank
+              FROM users u
+              WHERE u.is_active = true AND u.total_games > 0
+              ORDER BY u.best_score DESC, u.best_time ASC;
+              
+              -- Create indexes
+              CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
+              CREATE INDEX IF NOT EXISTS idx_users_best_score ON users(best_score DESC);
+              CREATE INDEX IF NOT EXISTS idx_users_last_played ON users(last_played);
+              CREATE INDEX IF NOT EXISTS idx_games_user_id ON games(user_id);
+              CREATE INDEX IF NOT EXISTS idx_games_score ON games(score DESC);
+              CREATE INDEX IF NOT EXISTS idx_games_completed_at ON games(completed_at);
+              CREATE INDEX IF NOT EXISTS idx_game_matches_game_id ON game_matches(game_id);
+              
+              -- Create function to update user stats
+              CREATE OR REPLACE FUNCTION update_user_stats()
+              RETURNS TRIGGER AS $$
+              BEGIN
+                  IF NEW.game_completed = true AND (OLD.game_completed = false OR OLD.game_completed IS NULL) THEN
+                      UPDATE users 
+                      SET 
+                          total_games = total_games + 1,
+                          total_score = total_score + NEW.score,
+                          best_score = GREATEST(best_score, NEW.score),
+                          best_time = CASE 
+                              WHEN best_time IS NULL OR NEW.time_elapsed < best_time 
+                              THEN NEW.time_elapsed 
+                              ELSE best_time 
+                          END,
+                          last_played = CURRENT_TIMESTAMP
+                      WHERE id = NEW.user_id;
+                  END IF;
+                  RETURN NEW;
+              END;
+              $$ LANGUAGE plpgsql;
+              
+              -- Create trigger
+              DROP TRIGGER IF EXISTS trigger_update_user_stats ON games;
+              CREATE TRIGGER trigger_update_user_stats
+                  AFTER UPDATE ON games
+                  FOR EACH ROW
+                  EXECUTE FUNCTION update_user_stats();
+              
+              -- Insert sample users
+              INSERT INTO users (username, email, display_name, total_games, total_score, best_score, best_time) VALUES
+              ('joker_master', 'joker@memory.com', 'The Joker Master 🃏', 15, 1250, 95, 45000),
+              ('memory_ninja', 'ninja@memory.com', 'Memory Ninja 🥷', 22, 1890, 98, 38000),
+              ('card_wizard', 'wizard@memory.com', 'Card Wizard 🧙‍♂️', 18, 1560, 92, 52000),
+              ('brain_trainer', 'brain@memory.com', 'Brain Trainer 🧠', 12, 980, 88, 61000),
+              ('speed_demon', 'speed@memory.com', 'Speed Demon ⚡', 25, 2100, 100, 28000),
+              ('focus_champion', 'focus@memory.com', 'Focus Champion 🏆', 19, 1680, 94, 42000),
+              ('pattern_seeker', 'pattern@memory.com', 'Pattern Seeker 🔍', 16, 1420, 91, 48000),
+              ('memory_legend', 'legend@memory.com', 'Memory Legend 👑', 30, 2750, 99, 32000)
+              ON CONFLICT (username) DO NOTHING;
+              
+              SELECT 'Database schema initialized successfully!' as status;
+              EOF
+              
+              echo "✅ Database schema initialization complete!"
+          env:
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: humor-game-secrets
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: humor-game-secrets
+                  key: DB_PORT
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: humor-game-secrets
+                  key: DB_NAME
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: humor-game-secrets
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: humor-game-secrets
+                  key: DB_PASSWORD
+

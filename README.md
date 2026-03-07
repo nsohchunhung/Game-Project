@@ -12,6 +12,72 @@
 
 ---
 
+## 🚀 **Start Here - Choose Your Path**
+
+> **👋 First time here?** Don't know where to start? Use the guide below to find your perfect path.
+
+### **⚡ I Just Want to See It Work (5 Minutes)**
+```bash
+# Quick demo - no learning required
+docker-compose up -d
+# Open: http://localhost:8080
+```
+**Perfect for**: Quick preview, testing, or just curious  
+**Next step**: [Learn how it works →](#-learning-milestones)
+
+**Having trouble?** See [Troubleshooting](docs/local/08-troubleshooting.md) or [FAQ](docs/local/09-faq.md).
+
+---
+
+### **📚 I Want to Learn Kubernetes (5-8 Hours)**
+**Start here**: [Local Development Guide](docs/local/README.md)  
+**First step**: [Prerequisites Setup](docs/local/01-prereqs.md) (30 min)
+
+**Perfect for**: Beginners, career switchers, hands-on learners  
+**You'll learn**: Docker → Kubernetes → Monitoring → GitOps → Production
+
+<details>
+<summary>📋 Quick Prerequisites Checklist (Click to expand)</summary>
+
+- [ ] Docker Desktop installed (or Colima on macOS)
+- [ ] 4GB+ RAM available
+- [ ] Terminal/Command Prompt ready
+- [ ] 10GB+ free disk space
+- [ ] Stable internet connection
+
+**⏱️ Time Investment**: 5-8 hours (guided learning) | 2-3 hours (fast track)
+</details>
+
+---
+
+### **☁️ I Want to Deploy to AWS (3-4 Hours)**
+**Start here**: [AWS Deployment Guide](docs/aws/README.md)  
+**First step**: [Terraform Backend Setup](docs/aws/terraform-backend-setup.md) (30 min)
+
+**Perfect for**: Experienced users, production deployments, cloud learning  
+**You'll build**: EKS cluster, RDS database, VPC networking, CI/CD pipeline
+
+<details>
+<summary>📋 AWS Prerequisites Checklist (Click to expand)</summary>
+
+- [ ] AWS account with appropriate permissions
+- [ ] AWS CLI configured (`aws configure`)
+- [ ] Terraform >= 1.5.0 installed
+- [ ] kubectl installed
+- [ ] SSH key pair in AWS EC2
+- [ ] GitHub token for runner (optional)
+
+**⏱️ Time Investment**: 3-4 hours (guided) | 30-60 minutes (experienced)  
+**💰 Cost**: ~$50-100/month for production setup
+</details>
+
+---
+
+### **🎯 I Know What I Need - Show Me Everything**
+Jump to: [Complete Documentation](#-complete-documentation) | [Quick Commands](#-quick-commands) | [Learning Milestones](#-learning-milestones)
+
+---
+
 ## 🎯 **What You'll Learn**
 
 By completing this tutorial, you'll master:
@@ -40,17 +106,28 @@ By completing this tutorial, you'll master:
 
 ## 🚀 **Quick Start Guide**
 
-### **Option 1: Complete Learning Path (Recommended for Beginners)**
+<details>
+<summary>📚 Option 1: Complete Learning Path (Recommended for Beginners)</summary>
+
+**Best for**: Learning step-by-step, understanding each component
+
 ```bash
 # 1. Install prerequisites
-# Follow the guide: docs/01-prereqs.md
+# Follow the guide: docs/local/01-prereqs.md
 
 # 2. Follow step-by-step guides
-# Start with: docs/01-prereqs.md
-# Then follow: docs/02-compose.md → ... → docs/07-global.md
+# Start with: docs/local/01-prereqs.md
+# Then follow: docs/local/02-compose.md → ... → docs/local/07-global.md
 ```
 
-### **Option 2: Fast Deploy (For Experienced Users)**
+**⏱️ Time**: 5-8 hours | **🎯 Result**: Complete understanding + production deployment
+</details>
+
+<details>
+<summary>⚡ Option 2: Fast Deploy (For Experienced Users)</summary>
+
+**Best for**: Quick deployment, you know Kubernetes well
+
 ```bash
 # Deploy everything at once
 git clone https://github.com/Osomudeya/DevOps-Home-Lab-2025.git
@@ -61,12 +138,25 @@ make deploy-all
 make verify
 ```
 
-### **Option 3: Local Development Only**
+**⏱️ Time**: 30-60 minutes | **🎯 Result**: Running application stack
+</details>
+
+<details>
+<summary>🐳 Option 3: Local Development Only (5 Minutes)</summary>
+
+**Best for**: Quick demo, testing, or just running the app
+
 ```bash
 # Quick local setup with Docker Compose
 docker-compose up -d
 curl http://localhost:3001/api/health
+
+# Access the game
+# Open: http://localhost:8080
 ```
+
+**⏱️ Time**: 5 minutes | **🎯 Result**: Running application locally
+</details>
 
 ---
 
@@ -100,18 +190,22 @@ curl http://localhost:3001/api/health
 
 ## 📋 **Learning Milestones**
 
-| Milestone | What You'll Learn | Time | Difficulty |
-|-----------|-------------------|------|------------|
-| **[0. Prerequisites](docs/01-prereqs.md)** | Development environment setup | 15-30 min | 🟢 Beginner |
-| **[1. Docker Compose](docs/02-compose.md)** | Multi-container application | 30-45 min | 🟢 Beginner |
-| **[2. Kubernetes Basics](docs/03-k8s-basics.md)** | Production app deployment | 45-60 min | 🟡 Intermediate |
-| **[3. Production Ingress](docs/04-ingress.md)** | Internet access and networking | 30-45 min | 🟡 Intermediate |
-| **[4. Observability](docs/05-observability.md)** | Performance monitoring | 60-90 min | 🟡 Intermediate |
-| **[5. GitOps](docs/06-gitops.md)** | Automated deployments | 45-60 min | 🟠 Advanced |
-| **[6. Global Production](docs/07-global.md)** | Global scale and security | 90-120 min | 🔴 Expert |
+> **💡 Tip**: Follow these in order. Each milestone builds on the previous one.
 
-**📚 Total Learning Time**: 5-8 hours  
-**🎯 Skill Level**: Beginner to Production-Ready DevOps Engineer
+| Milestone | What You'll Learn | Time | Difficulty | Start Here |
+|-----------|-------------------|------|------------|------------|
+| **[0. Prerequisites](docs/local/01-prereqs.md)** | Development environment setup | 15-30 min | 🟢 Beginner | 👈 **Start here if new** |
+| **[1. Docker Compose](docs/local/02-compose.md)** | Multi-container application | 30-45 min | 🟢 Beginner | After prerequisites |
+| **[2. Kubernetes Basics](docs/local/03-k8s-basics.md)** | Production app deployment | 45-60 min | 🟡 Intermediate | After Docker Compose |
+| **[3. Production Ingress](docs/local/04-ingress.md)** | Internet access and networking | 30-45 min | 🟡 Intermediate | After Kubernetes |
+| **[4. Observability](docs/local/05-observability.md)** | Performance monitoring | 60-90 min | 🟡 Intermediate | After Ingress |
+| **[5. GitOps](docs/local/06-gitops.md)** | Automated deployments | 45-60 min | 🟠 Advanced | After Observability |
+| **[6. Global Production](docs/local/07-global.md)** | Global scale and security | 90-120 min | 🔴 Expert | After GitOps |
+| **[7. AWS Deployment](docs/aws/aws-deployment-guide.md)** | Cloud infrastructure | 180-240 min | 🔴 Expert | After Local Production |
+
+**📚 Total Learning Time**: 5-8 hours (local) + 3-4 hours (AWS)  
+**🎯 Skill Level**: Beginner → Production-Ready DevOps Engineer  
+**✅ End Result**: Production-grade Kubernetes deployment with monitoring, GitOps, and global access
 
 ## 🔄 **How It Works**
 
@@ -150,21 +244,36 @@ curl http://localhost:3001/api/health
 
 ## 📚 **Complete Documentation**
 
-### **📖 Core Tutorials**
-- **[🎯 Learning Path Overview](docs/00-overview.md)** - Complete tutorial roadmap
-- **[⚙️ Development Environment Setup](docs/01-prereqs.md)** - Install all required tools
-- **[🐳 Docker Multi-Container App](docs/02-compose.md)** - Build your first containerized app
-- **[☸️ Kubernetes Production Deployment](docs/03-k8s-basics.md)** - Deploy apps on Kubernetes
-- **[🌐 Internet Access & Networking](docs/04-ingress.md)** - Make your app accessible worldwide
-- **[📊 Performance Monitoring](docs/05-observability.md)** - Track app health and performance
-- **[🔄 Automated Deployments](docs/06-gitops.md)** - Deploy with GitOps automation
-- **[🌍 Global Scale & Security](docs/07-global.md)** - Production hardening and CDN
+### **🎯 Entry Points**
+- **[📖 Local Development Guide](docs/local/README.md)** - Start here for local learning (5-8 hours)
+- **[☁️ AWS Deployment Guide](docs/aws/README.md)** - Start here for cloud deployment (3-4 hours)
+- **[📚 Full Documentation Hub](docs/README.md)** - Complete documentation index
+
+### **📖 Core Tutorials (Local Development)**
+- **[🎯 Learning Path Overview](docs/local/00-overview.md)** - Complete tutorial roadmap
+- **[⚙️ Development Environment Setup](docs/local/01-prereqs.md)** - Install all required tools
+- **[🐳 Docker Multi-Container App](docs/local/02-compose.md)** - Build your first containerized app
+- **[☸️ Kubernetes Production Deployment](docs/local/03-k8s-basics.md)** - Deploy apps on Kubernetes
+- **[🌐 Internet Access & Networking](docs/local/04-ingress.md)** - Make your app accessible worldwide
+- **[📊 Performance Monitoring](docs/local/05-observability.md)** - Track app health and performance
+- **[🔄 Automated Deployments](docs/local/06-gitops.md)** - Deploy with GitOps automation
+- **[🌍 Global Scale & Security](docs/local/07-global.md)** - Production hardening and CDN
+
+### **☁️ AWS Deployment Tutorials**
+- **[🚀 AWS Deployment Guide](docs/aws/aws-deployment-guide.md)** - Complete AWS setup walkthrough
+- **[🏗️ AWS Architecture](docs/aws/aws-architecture.md)** - Infrastructure design and decisions
+- **[⚙️ Terraform Backend Setup](docs/aws/terraform-backend-setup.md)** - S3 backend configuration
+- **[🔐 AWS Secrets Manager](docs/aws/aws-secrets-manager-setup.md)** - Automatic secret management
+- **[🔧 Maintenance Guide](docs/aws/maintenance-guide.md)** - Operate and maintain AWS infrastructure
 
 ### **🔧 Reference Materials**
-- **[🚨 Troubleshooting](docs/08-troubleshooting.md)** - Common issues and solutions
-- **[❓ FAQ](docs/09-faq.md)** - Frequently asked questions
-- **[📖 Glossary](docs/10-glossary.md)** - Technical terms and definitions
-- **[📝 Decision Notes](docs/11-decision-notes.md)** - Architecture decisions explained
+- **[🚨 Troubleshooting](docs/local/08-troubleshooting.md)** - Common issues and solutions
+- **[❓ FAQ](docs/local/09-faq.md)** - Frequently asked questions
+- **[📖 Glossary](docs/local/10-glossary.md)** - Technical terms and definitions
+- **[📝 Decision Notes](docs/local/11-decision-notes.md)** - Architecture decisions explained
+- **[⚙️ Customization Guide](docs/local/customization-guide.md)** - Customize configuration and settings
+- **[👤 User Guide](docs/local/user-guide.md)** - How to access and use the application
+- **[🔧 Local Maintenance](docs/local/maintenance-guide.md)** - Maintain local environment
 
 ### **🛠️ Advanced Guides**
 - **[🔒 Security Contexts](docs/security-contexts-guide.md)** - Production security hardening
@@ -188,22 +297,32 @@ curl http://localhost:3001/api/health
 
 ## ⚠️ **Important Setup Notes**
 
-### **🔑 Domain Configuration**
+<details>
+<summary>🔑 Domain Configuration (Click to expand)</summary>
+
 > **CRITICAL**: This project uses `gameapp.games` as an example domain. For your own deployment:
 > 1. **Get a domain** (free options available for learning)
 > 2. Replace all instances of `gameapp.games` with your domain
 > 3. Configure Cloudflare DNS for your domain
 > 4. Update ingress configurations accordingly
 > 
-> **📝 See**: [Domain Replacement Guide](docs/domain-replacement-guide.md) | [Free Domain Setup](docs/07-global.md#step-3a-prerequisites---get-a-domain)
+> **📝 See**: [Domain Replacement Guide](docs/domain-replacement-guide.md) | [Free Domain Setup](docs/local/07-global.md#step-3a-prerequisites---get-a-domain)
+</details>
 
-### **💻 System Requirements**
+<details>
+<summary>💻 System Requirements (Click to expand)</summary>
+
 - **RAM**: 4GB+ available for Kubernetes cluster
 - **Storage**: 10GB+ free disk space
 - **OS**: macOS, Linux, or Windows with WSL2
 - **Network**: Stable internet for image downloads
 
-### **🛠️ Required Tools**
+**💡 Tip**: Close other applications if you have limited RAM
+</details>
+
+<details>
+<summary>🛠️ Required Tools (Click to expand)</summary>
+
 ```bash
 # Essential tools (install via prerequisite guide)
 docker --version    # Container runtime
@@ -214,11 +333,16 @@ node --version     # JavaScript runtime
 jq --version       # JSON processor
 ```
 
+**📖 Installation**: See [Prerequisites Guide](docs/local/01-prereqs.md) for step-by-step installation
+</details>
+
 ---
 
 ## 🔥 **Quick Commands**
 
-### **🚀 Deployment Commands**
+<details>
+<summary>🚀 Deployment Commands (Click to expand)</summary>
+
 ```bash
 # Deploy full stack
 make deploy-all
@@ -232,8 +356,11 @@ make deploy-gitops     # ArgoCD setup
 make verify-all
 make test-endpoints
 ```
+</details>
 
-### **🔍 Debugging Commands**
+<details>
+<summary>🔍 Debugging Commands (Click to expand)</summary>
+
 ```bash
 # Application health
 kubectl get pods -n humor-game
@@ -246,8 +373,11 @@ kubectl port-forward svc/prometheus -n monitoring 9090:9090
 # GitOps management
 kubectl port-forward svc/argocd-server -n argocd 8090:443
 ```
+</details>
 
-### **🧹 Cleanup Commands**
+<details>
+<summary>🧹 Cleanup Commands (Click to expand)</summary>
+
 ```bash
 # Clean individual components
 make clean-app
@@ -258,28 +388,40 @@ make clean-gitops
 make clean-all
 k3d cluster delete dev-cluster
 ```
+</details>
 
 ---
 
 ## 🆘 **Getting Help**
 
-### **📞 Support Channels**
+<details>
+<summary>📞 Support Channels (Click to expand)</summary>
+
 - 🐛 **Bug Reports**: [GitHub Issues](https://github.com/Osomudeya/DevOps-Home-Lab-2025/issues)
 - 💬 **Questions**: [GitHub Discussions](https://github.com/Osomudeya/DevOps-Home-Lab-2025/discussions)
-- 📖 **Documentation**: [Troubleshooting Guide](docs/08-troubleshooting.md)
-- 🎓 **Learning**: [FAQ Section](docs/09-faq.md)
+- 📖 **Documentation**: [Troubleshooting Guide](docs/local/08-troubleshooting.md)
+- 🎓 **Learning**: [FAQ Section](docs/local/09-faq.md)
+</details>
 
-### **🔧 Common Issues**
+<details>
+<summary>🔧 Common Issues (Click to expand)</summary>
+
 - **Pods stuck in pending**: Check resource availability with `kubectl describe`
 - **Services not accessible**: Verify ingress configuration and DNS
-- **ArgoCD redirect loops**: See [troubleshooting guide](docs/08-troubleshooting.md#argocd-issues)
+- **ArgoCD redirect loops**: See [troubleshooting guide](docs/local/08-troubleshooting.md#argocd-issues)
 - **Monitoring data missing**: Check Prometheus targets and service discovery
+- **Can't access application**: See [User Guide](docs/local/user-guide.md#troubleshooting-access)
+</details>
 
-### **💡 Pro Tips**
-- Start with the prerequisite guide - don't skip tool installation
-- Use `make verify` frequently to catch issues early
-- Check logs with `kubectl logs` when things go wrong
-- Join our community discussions for peer support
+<details>
+<summary>💡 Pro Tips (Click to expand)</summary>
+
+- ✅ Start with the prerequisite guide - don't skip tool installation
+- ✅ Use `make verify` frequently to catch issues early
+- ✅ Check logs with `kubectl logs` when things go wrong
+- ✅ Join our community discussions for peer support
+- ✅ Follow the learning path in order - each step builds on the previous
+</details>
 
 ---
 
@@ -293,7 +435,7 @@ We welcome contributions! Here's how you can help:
 - 🔧 **Add new features** or troubleshooting guides
 - ⭐ **Star the repository** to show support
 
-**📋 See**: [GitHub Issues](https://github.com/Osomudeya/DevOps-Home-Lab-2025.git/issues) for bug reports and feature requests
+**📋 See**: [CONTRIBUTING.md](CONTRIBUTING.md) for how to report issues and open pull requests · [GitHub Issues](https://github.com/Osomudeya/DevOps-Home-Lab-2026-2027/issues) for bug reports and feature requests
 
 ---
 
@@ -336,10 +478,14 @@ Special thanks to the open-source community and the maintainers of:
 
 ---
 
-*This guide teaches the same infrastructure patterns used by companies like Netflix, Airbnb, and GitHub. Start with [01-prereqs.md](docs/01-prereqs.md) to begin your journey!*
+*This guide teaches the same infrastructure patterns used by companies like Netflix, Airbnb, and GitHub.*
 
 ---
-## Where to go next
+
+## 🗺️ **Where to Go Next**
+
+<details>
+<summary>🚶 Continue Your Learning Journey (Click to expand)</summary>
 
 - ✅ **Stuck?** Open the **DevOps-Troubleshooting-Toolkit**: [https://github.com/Osomudeya/DevOps-Troubleshooting-Toolkit.git](https://github.com/Osomudeya/DevOps-Troubleshooting-Toolkit.git)
   - Linux • Docker • Kubernetes • AWS • Azure • Observability
@@ -352,3 +498,10 @@ Special thanks to the open-source community and the maintainers of:
 
 - 📦 **Ready for portfolio depth:**  
   → **Weekend-DevOps-Projects** (5 focused, resume-grade builds) Link: [https://github.com/Osomudeya/side-devops-projects.git](https://github.com/Osomudeya/side-devops-projects.git)
+</details>
+
+---
+
+## 🎯 **Ready to Start?**
+
+**Choose your path above** → [Local Learning](docs/local/README.md) | [AWS Deployment](docs/aws/README.md) | [Quick Demo](#-start-here---choose-your-path)

@@ -1,0 +1,151 @@
+name: 🚀 Deploy to AWS EKS
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+      - 'gitops-safe/**'
+      - '.github/workflows/deploy-aws.yml'
+  workflow_dispatch:
+  release:
+    types: [published]
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+  IMAGE_NAME_BACKEND: devops-home-lab-backend
+  IMAGE_NAME_FRONTEND: devops-home-lab-frontend
+  EKS_CLUSTER_NAME: devops-home-lab-prod-eks
+
+jobs:
+  build-and-push:
+    name: 🏗️ Build and Push to ECR
+    runs-on: self-hosted
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔐 Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 🔐 Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: 🏷️ Extract metadata for backend
+        id: meta-backend
+        run: |
+          echo "tags=${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME_BACKEND }}:${GITHUB_SHA::7},${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME_BACKEND }}:latest" >> $GITHUB_OUTPUT
+
+      - name: 🏷️ Extract metadata for frontend
+        id: meta-frontend
+        run: |
+          echo "tags=${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME_FRONTEND }}:${GITHUB_SHA::7},${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME_FRONTEND }}:latest" >> $GITHUB_OUTPUT
+
+      - name: 🏗️ Build and push backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: ${{ steps.meta-backend.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: 🏗️ Build and push frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          tags: ${{ steps.meta-frontend.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: 🔒 Scan images with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME_BACKEND }}:${GITHUB_SHA::7}
+          format: 'sarif'
+          output: 'trivy-backend.sarif'
+
+      - name: 📊 Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-backend.sarif'
+
+  update-gitops:
+    name: 🔄 Update GitOps Manifests
+    runs-on: self-hosted
+    needs: build-and-push
+    permissions:
+      contents: write
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🔧 Setup yq
+        uses: mikefarah/yq@v4.44.1
+
+      - name: 🏷️ Extract short SHA
+        id: short-sha
+        run: echo "sha=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_OUTPUT
+
+      - name: 📝 Update image tags in GitOps manifests
+        run: |
+          # Update backend image
+          yq eval ".spec.template.spec.containers[0].image = \"${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME_BACKEND }}:${{ steps.short-sha.outputs.sha }}\"" -i gitops-safe/base/backend-deployment.yaml
+          
+          # Update frontend image
+          yq eval ".spec.template.spec.containers[0].image = \"${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME_FRONTEND }}:${{ steps.short-sha.outputs.sha }}\"" -i gitops-safe/base/frontend-deployment.yaml
+          
+          # Update imagePullPolicy
+          yq eval ".spec.template.spec.containers[0].imagePullPolicy = \"Always\"" -i gitops-safe/base/backend-deployment.yaml
+          yq eval ".spec.template.spec.containers[0].imagePullPolicy = \"Always\"" -i gitops-safe/base/frontend-deployment.yaml
+
+      - name: 💾 Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add gitops-safe/base/backend-deployment.yaml gitops-safe/base/frontend-deployment.yaml
+          git diff --staged --quiet || git commit -m "🚀 Deploy: Update images to ${{ steps.short-sha.outputs.sha }}
+          
+          Backend: ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME_BACKEND }}:${{ steps.short-sha.outputs.sha }}
+          Frontend: ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME_FRONTEND }}:${{ steps.short-sha.outputs.sha }}
+          
+          Triggered by: ${{ github.event.head_commit.message }}"
+          git push
+
+  notify:
+    name: 📢 Notify Deployment
+    runs-on: ubuntu-latest
+    needs: [build-and-push, update-gitops]
+    if: always()
+
+    steps:
+      - name: 📢 Create deployment summary
+        run: |
+          echo "## 🚀 AWS Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "### Status: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Images:**" >> $GITHUB_STEP_SUMMARY
+          echo "  - Backend: ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME_BACKEND }}:${GITHUB_SHA::7}" >> $GITHUB_STEP_SUMMARY
+          echo "  - Frontend: ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME_FRONTEND }}:${GITHUB_SHA::7}" >> $GITHUB_STEP_SUMMARY
+          echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "1. ArgoCD will automatically sync the changes" >> $GITHUB_STEP_SUMMARY
+          echo "2. Monitor deployment in Grafana" >> $GITHUB_STEP_SUMMARY
+          echo "3. Verify application health" >> $GITHUB_STEP_SUMMARY
+

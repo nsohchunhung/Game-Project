@@ -1,0 +1,52 @@
+# AWS Overlay Patch: Update backend to use RDS (via External Secrets)
+# This patch replaces DB connection config to use secrets instead of ConfigMap
+# Local deployments use base config (PostgreSQL service), AWS uses this patch (RDS)
+#
+# Base config has:
+#   - DB_HOST: "postgres" (hardcoded)
+#   - DB_NAME: from ConfigMap
+#   - DB_USER: from ConfigMap
+#   - DB_PORT: not set (defaults to 5432 in app)
+#
+# This patch changes to:
+#   - DB_HOST: from secrets (RDS endpoint)
+#   - DB_PORT: from secrets (RDS port)
+#   - DB_NAME: from secrets (RDS database name)
+#   - DB_USER: from secrets (RDS username)
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: humor-game
+spec:
+  template:
+    spec:
+      containers:
+        - name: backend
+          env:
+            # Replace DB_HOST from hardcoded "postgres" to RDS endpoint from secrets
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: humor-game-secrets
+                  key: DB_HOST
+            # Add DB_PORT from secrets (not in base config)
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: humor-game-secrets
+                  key: DB_PORT
+            # Replace DB_NAME from ConfigMap to secrets (for RDS)
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: humor-game-secrets
+                  key: DB_NAME
+            # Replace DB_USER from ConfigMap to secrets (for RDS)
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: humor-game-secrets
+                  key: DB_USER
+

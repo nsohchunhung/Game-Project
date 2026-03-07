@@ -1,0 +1,82 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: humor-game-aws
+  namespace: humor-game
+
+# AWS-specific overlay - patches images to use ECR instead of GHCR
+# This keeps local/base configs intact
+
+# Reference the base configuration
+resources:
+- ../../base
+- rds-init-job.yaml  # Initialize RDS schema (AWS only)
+
+# Common labels for AWS environment
+commonLabels:
+  app.kubernetes.io/name: humor-game
+  app.kubernetes.io/instance: aws
+  app.kubernetes.io/part-of: gitops-aws
+  app.kubernetes.io/managed-by: argocd
+  environment: aws
+
+# Common annotations
+commonAnnotations:
+  argocd.argoproj.io/tracking-id: humor-game-aws:/kustomization.yaml
+  gitops.argoproj.io/description: "AWS deployment for Humor Game"
+  gitops.argoproj.io/environment: "aws"
+
+# Image patches - override base images with ECR images
+images:
+  # Backend image - will be updated by CI/CD pipeline
+  - name: ghcr.io/osomudeya/devops-home-lab-2025-backend
+    newName: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/devops-home-lab-backend
+    newTag: latest
+  
+  # Frontend image - will be updated by CI/CD pipeline
+  - name: ghcr.io/osomudeya/devops-home-lab-2025-frontend
+    newName: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/devops-home-lab-frontend
+    newTag: latest
+
+# Patches for AWS-specific configurations
+patches:
+  # Patch backend deployment for AWS - use RDS instead of PostgreSQL service
+  - path: backend-db-patch.yaml
+    target:
+      kind: Deployment
+      name: backend
+  # Patch backend deployment for AWS - ECR image pull
+  - target:
+      kind: Deployment
+      name: backend
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/imagePullPolicy
+        value: Always
+      - op: add
+        path: /spec/template/spec/imagePullSecrets
+        value:
+          - name: ecr-registry-secret
+  
+  # Patch frontend deployment for AWS
+  - target:
+      kind: Deployment
+      name: frontend
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/imagePullPolicy
+        value: Always
+      - op: add
+        path: /spec/template/spec/imagePullSecrets
+        value:
+          - name: ecr-registry-secret
+
+# Add ECR image pull secret (will be created separately)
+# This is a reference - the actual secret needs to be created via:
+# kubectl create secret docker-registry ecr-registry-secret \
+#   --docker-server=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com \
+#   --docker-username=AWS \
+#   --docker-password=$(aws ecr get-login-password --region ${AWS_REGION}) \
+#   --namespace=humor-game
+

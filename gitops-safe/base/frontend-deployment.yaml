@@ -19,8 +19,8 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: humor-game-frontend:latest
-          imagePullPolicy: Never
+          image: ghcr.io/osomudeya/devops-home-lab-2025-frontend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           env:

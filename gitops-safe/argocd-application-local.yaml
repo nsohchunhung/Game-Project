@@ -1,1 +1,53 @@
- 
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: humor-game-local
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: humor-game-safe
+  
+  # Source - local development branch
+  source:
+    repoURL: https://github.com/Osomudeya/DevOps-Home-Lab-2025.git
+    targetRevision: HEAD  # Use current branch for local development
+    path: gitops-safe/base  # Use base configuration for local dev
+  
+  # Destination - your local cluster
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: humor-game
+  
+  # Sync policy - More permissive for local development
+  syncPolicy:
+    automated:
+      prune: false  # Don't auto-delete for safety
+      selfHeal: false  # Don't auto-fix drift
+      allowEmpty: false
+    syncOptions:
+    - CreateNamespace=true  # Allow namespace creation for local
+    - ApplyOutOfSyncOnly=true
+    - PrunePropagationPolicy=foreground
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  
+  # Ignore common local development differences
+  ignoreDifferences:
+  - group: apps
+    kind: Deployment
+    jsonPointers:
+    - /spec/template/metadata/annotations/deployment.kubernetes.io~1revision
+    - /spec/template/spec/containers/0/image  # Allow local image differences
+  - group: ''
+    kind: Service
+    jsonPointers:
+    - /spec/clusterIP
+    - /spec/clusterIPs
+  
+  # Revision history
+  revisionHistoryLimit: 10

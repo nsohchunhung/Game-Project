@@ -1,0 +1,75 @@
+# DevOps Production Deployment eBook Configuration
+# Pandoc/MkDocs compatible metadata
+
+title: "DevOps Production Deployment: From Docker to Global Scale"
+subtitle: "A Complete Guide to Building Production-Ready Applications with Kubernetes"
+author: "Zudonu Osomudeya"
+date: "2025"
+version: "1.0"
+publisher: "DevOps Learning Path"
+language: "en-US"
+
+# Book metadata
+description: |
+  Master DevOps by building a real application that scales from local development 
+  to global production. Learn the same patterns used by companies like Netflix, 
+  Airbnb, and GitHub through hands-on experience with a complete Humor Memory Game 
+  application stack.
+
+keywords:
+  - DevOps
+  - Kubernetes
+  - Docker
+  - Production Deployment
+  - Monitoring
+  - GitOps
+  - Observability
+  - Cloud Native
+
+# Technical specifications
+format: markdown
+output: 
+  - html
+  - pdf
+  - epub
+
+# MkDocs configuration
+site_name: "DevOps Production Deployment Guide"
+theme:
+  name: material
+  palette:
+    primary: blue
+    accent: cyan
+
+# Pandoc configuration
+pandoc:
+  toc: true
+  number-sections: true
+  highlight-style: github
+  
+# Copyright and licensing
+copyright: "© 2025 Zudonu Osomudeya. Licensed under MIT License."
+license: "MIT"
+
+# Repository information
+repo_url: "https://github.com/Osomudeya/DevOps-Home-Lab-2025"
+edit_uri: "edit/main/book/"
+
+# Book structure
+chapters:
+  - "00-front-matter.md"
+  - "01-intro.md"
+  - "02-architecture.md" 
+  - "03-env-setup.md"
+  - "04-local-compose.md"
+  - "05-kubernetes-basics.md"
+  - "06-ingress-networking.md"
+  - "07-ci-cd.md"
+  - "08-observability.md"
+  - "09-gitops.md"
+  - "10-prod-hardening.md"
+  - "11-deployment-strategies.md"
+  - "12-troubleshooting.md"
+  - "13-interview-prep.md"
+  - "appendix-a-glossary.md"
+  - "appendix-b-quick-ref.md"

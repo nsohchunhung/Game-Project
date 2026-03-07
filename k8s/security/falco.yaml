@@ -1,0 +1,54 @@
+# Falco for runtime security monitoring
+# Install via Helm: helm install falco falcosecurity/falco --namespace falco --create-namespace
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: falco
+  labels:
+    name: falco
+---
+# Falco ConfigMap for custom rules
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: falco-config
+  namespace: falco
+data:
+  falco.yaml: |
+    rules_file:
+      - /etc/falco/falco_rules.yaml
+      - /etc/falco/falco_rules.local.yaml
+      - /etc/falco/rules.d
+    
+    json_output: true
+    json_include_output_property: true
+    json_include_tags_property: true
+    
+    http_output:
+      enabled: true
+      url: "http://falcosidekick:2801"
+    
+    webserver:
+      enabled: true
+      listen_port: 8765
+      k8s_audit_endpoint: /k8s-audit
+      ssl_enabled: false
+    
+    syscall_event_drops:
+      actions:
+        - log
+        - alert
+    
+    syscall_event_drop_rate: 0.33
+    syscall_event_drop_max_burst: 1000
+    
+    load_plugins: [json]
+    
+    plugins:
+      - name: json
+        library_path: libjson.so
+        init_config:
+          sdk_version: 2
+        open_params: ""
+
