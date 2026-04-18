@@ -1,6 +1,6 @@
 # Kubernetes Tutorial: Build Production Apps from Scratch
 
-*Learn DevOps by building a real application: Docker → Kubernetes → Monitoring → GitOps → Global Deployment. Perfect for career switchers and beginners.*
+*Learn DevOps The right way by building a real application: Docker → Kubernetes → Monitoring → GitOps → Global Deployment. Perfect for career switchers and beginners.*
 
 > This project is part of the **Zee DevOps Learning Path**  
 > Start: Quick Wins → Core: Beginner-DevOps-Labs → Reference: Troubleshooting Toolkit → Portfolio: Weekend Projects → Cloud: Cloud-DevOps-Projects
