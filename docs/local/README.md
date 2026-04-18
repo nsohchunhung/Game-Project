@@ -8,6 +8,7 @@ This directory contains all documentation for local development, testing, and le
 
 | Step | Guide | Description |
 |------|-------|-------------|
+| **Roadmap** | [Local Completion Roadmap](./LOCAL-ROADMAP.md) | Practical checklist that ties the local docs to this repo's actual files |
 | **0** | [Learning Path Overview](./00-overview.md) | Complete tutorial roadmap and architecture |
 | **1** | [Prerequisites Setup](./01-prereqs.md) | Install Docker, Kubernetes tools, and dev environment |
 | **2** | [Docker Multi-Container App](./02-compose.md) | Build your first containerized application |
@@ -30,20 +31,26 @@ This directory contains all documentation for local development, testing, and le
 
 ### Docker Compose (Simplest)
 ```bash
-docker-compose up -d
-# Access at http://localhost:8080
+docker compose up -d
+# Access at http://localhost:3000
 ```
 
 ### Local Kubernetes (k3d)
 ```bash
-# Create cluster
-k3d cluster create humor-game
+# Create cluster from the repo config
+k3d cluster create --config k3d-config.yaml
 
-# Deploy application
-kubectl apply -f k8s/
+# Deploy application in the order shown in LOCAL-ROADMAP.md
+kubectl apply -f k8s/namespace.yaml
+kubectl apply -f k8s/configmap.yaml
+kubectl apply -f k8s/secrets.yaml
+kubectl apply -f k8s/postgres.yaml
+kubectl apply -f k8s/redis.yaml
+kubectl apply -f k8s/backend.yaml
+kubectl apply -f k8s/frontend.yaml
 
 # Access via port-forward
-kubectl port-forward svc/frontend -n humor-game 8080:80
+kubectl port-forward svc/frontend -n humor-game 3000:80
 ```
 
 ## 🎯 Learning Objectives
@@ -66,4 +73,3 @@ By following these guides, you will learn:
 
 - **[AWS Deployment](../aws/README.md)** - Production AWS infrastructure
 - **[Main Documentation](../README.md)** - Complete documentation hub
-
