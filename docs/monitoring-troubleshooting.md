@@ -1,4 +1,4 @@
-# Monitoring Troubleshooting Guide
+kubectl apply -f k8s/prometheus-rbac.yaml# Monitoring Troubleshooting Guide
 
 ## Overview
 This document details the monitoring issues encountered during the home lab setup and the step-by-step solutions implemented to resolve them.

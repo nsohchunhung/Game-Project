@@ -4,6 +4,8 @@ This roadmap is the practical, step-by-step path for completing the Humor Memory
 
 Use this as the working checklist. Complete one phase, verify the checkpoint, then move to the next phase.
 
+As you work through it, record commands, results, problems, and fixes in [PROGRESS-JOURNAL.md](PROGRESS-JOURNAL.md).
+
 ## Source Guides
 
 - [home-lab.md](../../home-lab.md)
@@ -313,12 +315,16 @@ Checkpoint:
 Goal: deploy Prometheus and Grafana.
 
 ```bash
-kubectl apply -f k8s/prometheus-rbac.yaml
-kubectl apply -f k8s/monitoring.yaml
+kubectl apply -f k8s/simple-monitoring.yaml
 kubectl wait --for=condition=ready pod -l app=prometheus -n monitoring --timeout=300s
 kubectl wait --for=condition=ready pod -l app=grafana -n monitoring --timeout=300s
 kubectl get pods -n monitoring
 ```
+
+Why this manifest:
+
+- `k8s/simple-monitoring.yaml` does not depend on Prometheus Operator CRDs.
+- `k8s/monitoring.yaml` includes `ServiceMonitor` resources and is better treated as an advanced follow-up once those CRDs are installed.
 
 Access Prometheus:
 
@@ -343,12 +349,6 @@ Grafana login:
 
 ```text
 admin / admin123
-```
-
-Import the recommended dashboard:
-
-```text
-k8s/comprehensive-dashboard.json
 ```
 
 Generate sample traffic:
@@ -549,4 +549,3 @@ The local project is complete when:
 - ArgoCD runs in the `argocd` namespace and tracks the GitOps app.
 - HPA and network policies are applied without breaking the app.
 - Optional: Cloudflare Tunnel exposes the app through your real domain.
-

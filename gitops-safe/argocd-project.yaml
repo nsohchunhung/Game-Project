@@ -6,9 +6,9 @@ metadata:
 spec:
   description: Safe GitOps monitoring for Humor Game (read-only initially)
   
-  # Source repositories - only allow your specific repo
+  # Source repositories - only allow your specific repo in gitop
   sourceRepos:
-  - 'https://github.com/Osomudeya/DevOps-Home-Lab-2025.git'
+  - 'https://github.com/nsohchunhung/Game-Project.git'
   
   # Destination clusters and namespaces
   destinations:

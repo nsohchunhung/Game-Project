@@ -10,7 +10,7 @@ spec:
   
   # Source - local development branch
   source:
-    repoURL: https://github.com/Osomudeya/DevOps-Home-Lab-2025.git
+    repoURL: https://github.com/nsohchunhung/Game-Project.git
     targetRevision: HEAD  # Use current branch for local development
     path: gitops-safe/base  # Use base configuration for local dev
   

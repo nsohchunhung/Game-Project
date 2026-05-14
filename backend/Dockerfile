@@ -10,8 +10,8 @@ RUN apk add --no-cache postgresql-client redis
 # Copy package files
 COPY package*.json ./
 
-# Install Node.js dependencies
-RUN npm ci --only=production && npm cache clean --force
+# Install production Node.js dependencies
+RUN npm ci --omit=dev && npm cache clean --force
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && \
